@@ -1,9 +1,48 @@
+<!DOCTYPE html>
 <html>
-<head>
-<title>dev</title>
-</head>
-<body>
-Mytest amplify  environment
-</body>
+  <head>
+    <title>Server Status Check</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      window.onload = function() {
+        var clickCount = 0;
+        var buttonElement = document.getElementsByTagName("button")[0];
+        buttonElement.addEventListener("click", function() {
+          clickCount++;
+          document.getElementById("click-count").innerHTML = "Click count: " + clickCount;
+        });
+
+        function checkServerStatus() {
+          var currentTime = new Date().toLocaleTimeString();
+          $.ajax({
+            url: "http://43.205.130.84/server-status",
+            type: "GET",
+            dataType: "text",
+            success: function(response) {
+              var statusElement = document.getElementById("status");
+              var newStatusElement = document.createElement("p");
+              newStatusElement.innerHTML = "Server is up and running! Current time: " + currentTime;
+              statusElement.appendChild(newStatusElement);
+            },
+            error: function(xhr, status, error) {
+              var statusElement = document.getElementById("status");
+              var newStatusElement = document.createElement("p");
+              newStatusElement.innerHTML = "Server is down. Current time: " + currentTime;
+              statusElement.appendChild(newStatusElement);
+            }
+          });
+        }
+        setInterval(checkServerStatus, 1000);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Server Status Check</h1><br>
+	<h4>DEV Env</h4>
+    <button>Server Status Check</button>
+    <div id="click-count"></div>
+    <div id="status">
+      <p>Checking server status...</p>
+    </div>
+  </body>
 </html>
-~        
